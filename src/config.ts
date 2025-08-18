@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { shape } from 'viem/chains';
 
 export const config = {
