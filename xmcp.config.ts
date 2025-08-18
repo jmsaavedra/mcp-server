@@ -2,7 +2,7 @@ import { type XmcpConfig } from 'xmcp';
 
 const config: XmcpConfig = {
   http: {
-    port: 3002,
+    port: process.env.PORT ? parseInt(process.env.PORT) : 3002,
   },
 };
 
