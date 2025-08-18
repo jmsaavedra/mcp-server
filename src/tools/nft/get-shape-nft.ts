@@ -42,7 +42,7 @@ export default async function getShapeNft({ address }: InferSchema<typeof schema
 
   try {
     const nftsResponse: OwnedNftsResponse = await alchemy.nft.getNftsForOwner(address, {
-      pageSize: 25,
+      pageSize: 100, // Increased from 25 to get better collection coverage
       omitMetadata: false,
       orderBy: NftOrdering.TRANSFERTIME,
       excludeFilters: [],
@@ -59,6 +59,20 @@ export default async function getShapeNft({ address }: InferSchema<typeof schema
         imageUrl: nft.image?.originalUrl || nft.image?.thumbnailUrl || null,
       })),
     };
+
+    // Add collection summary
+    const collections = new Map<string, { count: number, name: string | null }>();
+    nftsResponse.ownedNfts.forEach(nft => {
+      const addr = nft.contract.address;
+      const existing = collections.get(addr) || { count: 0, name: nft.contract.name || null };
+      collections.set(addr, { count: existing.count + 1, name: existing.name });
+    });
+
+    result.collections = Array.from(collections.entries()).map(([address, info]) => ({
+      contractAddress: address as Address,
+      name: info.name,
+      ownedCount: info.count
+    }));
 
     const response = {
       content: [

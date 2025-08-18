@@ -28,6 +28,11 @@ export type ShapeNftOutput = {
     name: string | null;
     imageUrl: string | null;
   }>;
+  collections?: Array<{
+    contractAddress: Address;
+    name: string | null;
+    ownedCount: number;
+  }>;
 };
 
 export type ToolErrorOutput = {
