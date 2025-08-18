@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { type InferSchema } from 'xmcp';
 import { Address, isAddress } from 'viem';
-import { NftFilters, NftOrdering, OwnedNftsResponse } from 'alchemy-sdk';
+import { NftOrdering, OwnedNftsResponse } from 'alchemy-sdk';
 import { alchemy } from '../../clients';
 import { config } from '../../config';
 import type { ShapeNftOutput, ToolErrorOutput } from '../../types';
@@ -45,7 +45,7 @@ export default async function getShapeNft({ address }: InferSchema<typeof schema
       pageSize: 25,
       omitMetadata: false,
       orderBy: NftOrdering.TRANSFERTIME,
-      excludeFilters: [NftFilters.SPAM, NftFilters.AIRDROPS],
+      excludeFilters: [],
     });
 
     const result: ShapeNftOutput = {
