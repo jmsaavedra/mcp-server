@@ -41,11 +41,11 @@ export const redis = config.redisUrl ? (() => {
     const isUpstash = url.hostname.includes('upstash.io');
     
     const redisConfig = {
-      maxRetriesPerRequest: 1, // Minimal retries
-      connectTimeout: 5000,
+      maxRetriesPerRequest: 3,
+      connectTimeout: 10000,
       lazyConnect: true,
       retryDelayOnFailover: 100,
-      enableOfflineQueue: false, // Don't queue commands when disconnected
+      enableOfflineQueue: true, // Allow commands to queue when disconnected
       // For Upstash, we need TLS
       ...(isUpstash && { 
         tls: {
