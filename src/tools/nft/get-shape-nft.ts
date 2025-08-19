@@ -52,7 +52,6 @@ export const schema = {
     .number()
     .min(1)
     .max(100)
-    .default(100)
     .optional()
     .describe('Number of NFTs to return per page (1-100, default: 100)'),
 };
@@ -73,8 +72,9 @@ export const metadata = {
   },
 };
 
-export default async function getShapeNft({ address, pageKey, pageSize = 100 }: InferSchema<typeof schema>) {
-  const cacheKey = `mcp:shapeNft:${config.chainId}:${address.toLowerCase()}:${pageKey || 'first'}:${pageSize}`;
+export default async function getShapeNft({ address, pageKey, pageSize }: InferSchema<typeof schema>) {
+  const actualPageSize = pageSize || 100;
+  const cacheKey = `mcp:shapeNft:${config.chainId}:${address.toLowerCase()}:${pageKey || 'first'}:${actualPageSize}`;
   const cached = await getCached(cacheKey);
 
   if (cached) {
@@ -84,7 +84,7 @@ export default async function getShapeNft({ address, pageKey, pageSize = 100 }: 
   try {
     const nftsResponse: OwnedNftsResponse = await retryWithBackoff(async () => {
       return await alchemy.nft.getNftsForOwner(address, {
-        pageSize: pageSize,
+        pageSize: actualPageSize,
         pageKey: pageKey,
         omitMetadata: false,
         orderBy: NftOrdering.TRANSFERTIME,
@@ -104,7 +104,7 @@ export default async function getShapeNft({ address, pageKey, pageSize = 100 }: 
       })),
       pagination: {
         currentPage: pageKey ? parseInt(pageKey.split(':')[1] || '1') : 1,
-        pageSize: pageSize,
+        pageSize: actualPageSize,
         hasNextPage: !!nftsResponse.pageKey,
         nextPageKey: nftsResponse.pageKey,
         totalReturned: nftsResponse.ownedNfts.length,
