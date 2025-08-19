@@ -33,6 +33,13 @@ export type ShapeNftOutput = {
     name: string | null;
     ownedCount: number;
   }>;
+  pagination: {
+    currentPage: number;
+    pageSize: number;
+    hasNextPage: boolean;
+    nextPageKey?: string;
+    totalReturned: number;
+  };
 };
 
 export type ToolErrorOutput = {

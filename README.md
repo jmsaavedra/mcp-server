@@ -37,9 +37,13 @@ Example prompt: "what's the vibe on collection 0x567...abc? floor price and top 
 
 #### `getShapeNft`
 
-List NFTs for an address, with metadata.
+List NFTs for an address, with metadata and pagination support. Returns up to 100 NFTs per page.
 
-Example prompt: "what NFTs does 0xabcd...123 hold on shape?"
+Example prompts:
+
+- "what NFTs does 0xabcd...123 hold on shape?"
+- "get the first 50 NFTs for wallet 0xabcd...123"
+- "get the next page of NFTs using pageKey xyz..."
 
 ### Gasback Tools (`/tools/gasback/`)
 

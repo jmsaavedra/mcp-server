@@ -4,7 +4,7 @@ import rateLimit from 'express-rate-limit';
 // Rate limit deployed version, tweak or remove when self-hosting.
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 75, // limit each IP requests per windowMs
+  max: process.env.NODE_ENV === 'production' ? 75 : 1000, // Higher limit for dev
   message: {
     error: 'Too many requests from this IP, please try again later.',
   },
@@ -16,8 +16,8 @@ const limiter = rateLimit({
 });
 
 const middleware: Middleware = async (req, res, next) => {
-  // Only rate limit in production deployed MCP server.
-  if (process.env.NODE_ENV !== 'production') {
+  // Only rate limit in production deployed MCP server, and skip if DISABLE_RATE_LIMIT is set
+  if (process.env.NODE_ENV !== 'production' || process.env.DISABLE_RATE_LIMIT === 'true') {
     return next();
   }
 
